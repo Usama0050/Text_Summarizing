@@ -4,7 +4,7 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 # Load from Hugging Face Hub
 @st.cache_resource
 def load_model():
-    model_name = "t5_model"  # 🔁 Replace with your model name
+    model_name = "Usamahf0050/t5_model"  # 🔁 Replace with your model name
     tokenizer = T5Tokenizer.from_pretrained(model_name)
     model = T5ForConditionalGeneration.from_pretrained(model_name)
     return model, tokenizer
