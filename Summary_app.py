@@ -1,33 +1,35 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-import torch
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 
-# Load saved model
+# Load from Hugging Face Hub
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("t5_model")
-    model = AutoModelForSeq2SeqLM.from_pretrained("t5_model")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = model.to(device)
-    return tokenizer, model, device
+    model_name = "Usamahf0050/t5_model"  # 🔁 Replace with your model name
+    tokenizer = T5Tokenizer.from_pretrained(model_name)
+    model = T5ForConditionalGeneration.from_pretrained(model_name)
+    return model, tokenizer
 
-tokenizer, model, device = load_model()
+model, tokenizer = load_model()
 
-# Web UI
-st.title("📄 Article Summarizer using T5-small")
-st.write("Enter your article or paragraph below and click 'Summarize'.")
+# UI
+st.set_page_config(page_title="T5 Summarizer", layout="wide")
+st.title("Text Summarizer")
 
-text = st.text_area("Enter Text:", height=300)
+text_input = st.text_area("Enter article or paragraph:", height=200)
 
 if st.button("Summarize"):
-    if not text.strip():
-        st.warning("Please enter some text.")
-    else:
-        input_text = "summarize: " + text.strip()
-        input_ids = tokenizer.encode(input_text, return_tensors="pt", max_length=512, truncation=True).to(device)
-
-        summary_ids = model.generate(input_ids, max_length=60, min_length=15, length_penalty=2.0, num_beams=4, early_stopping=True)
+    if text_input.strip():
+        input_ids = tokenizer.encode("summarize: " + text_input, return_tensors="pt", max_length=512, truncation=True)
+        summary_ids = model.generate(
+            input_ids,
+            max_length=150,
+            min_length=40,
+            length_penalty=2.0,
+            num_beams=4,
+            early_stopping=True
+        )
         summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
-        st.subheader("📝 Summary")
-        st.success(summary)
+        st.success("Summary:")
+        st.write(summary)
+    else:
+        st.warning("Please enter some text to summarize.")
