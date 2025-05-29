@@ -4,7 +4,7 @@ import torch
 
 @st.cache_resource
 def load_model():
-    model_path = "model"  # Path to local folder with saved PEGASUS model
+    model_path = "Usamahf0050/PEGASUS_Model"  # Path to local folder with saved PEGASUS model
     tokenizer = PegasusTokenizer.from_pretrained(model_path)
     model = PegasusForConditionalGeneration.from_pretrained(model_path)
     return model, tokenizer
