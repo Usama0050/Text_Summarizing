@@ -8,7 +8,7 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_PATH)
 
 st.title("Text_Summarizer")
-#st.write("Summarize text using Facebook's BART model.")
+st.write("Summarize Your text.")
 
 text = st.text_area("Enter your text here:", height=300)
 
